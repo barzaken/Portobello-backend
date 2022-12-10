@@ -14,6 +14,7 @@ function setupSocketAPI(http) {
             logger.info(`Socket disconnected [id: ${socket.id}]`)
         })
         socket.on('notification',notification =>{
+            console.log(notification);
             let msg = notification.notification
             gIo.to(notification.to).emit('new-notification',msg)
         })
