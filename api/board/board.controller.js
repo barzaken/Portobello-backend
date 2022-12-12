@@ -27,10 +27,21 @@ async function getBoardById(req, res) {
     res.status(500).send({ err: 'Failed to get board' })
   }
 }
+async function updateTask(req, res) {
+  try {
+    req.body
+    const boardId = req.body.boardId
+    const task = req.body.task
+    const newTask = await boardService.updateTask(boardId,task)
+    res.json(newTask)
+  } catch (err) {
+    logger.error('Failed to get board', err)
+    res.status(500).send({ err: 'Failed to get board' })
+  }
+}
 
 async function addBoard(req, res) {
   const {loggedinUser} = req
-
   try {
     const board = req.body
     board.owner = loggedinUser
@@ -46,14 +57,11 @@ async function addBoard(req, res) {
 async function updateBoard(req, res) {
   try {
     const board = req.body
-    console.log('board controller tal!! ', req.body)
     const updatedBoard = await boardService.update(board)
-    console.log("🚀 ~ file: board.controller.js:49 ~ updateBoard ~ updatedBoard", updatedBoard)
     res.json(updatedBoard)
   } catch (err) {
     logger.error('Failed to update board', err)
     res.status(500).send({ err: 'Failed to update board' })
-
   }
 }
 
@@ -107,5 +115,6 @@ module.exports = {
   updateBoard,
   removeBoard,
   addBoardMsg,
-  removeBoardMsg
+  removeBoardMsg,
+  updateTask
 }

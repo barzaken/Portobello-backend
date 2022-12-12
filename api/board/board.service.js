@@ -18,6 +18,22 @@ async function query(filterBy) {
     }
 }
 
+async function updateTask(boardId,task){
+    try{
+        const collection = await dbService.getCollection('board')
+        const newBoard = await collection.findOne({ _id: ObjectId(boardId) })
+        const groupIdx = newBoard.groups.findIndex(group => group.tasks.find(t=> t.id === task.id))
+        const taskIdx = newBoard.groups[groupIdx].tasks.findIndex(t => t.id === task.id)
+        newBoard.groups[groupIdx].tasks.splice(taskIdx,1,task)
+        await collection.updateOne({ _id: ObjectId(boardId) }, { $set: newBoard })
+        return task
+    }
+    catch(err){
+        logger.error(`while updating task ${task.id}`, err)
+        throw err
+    }
+}
+
 async function getById(boardId) {
     try {
         const collection = await dbService.getCollection('board')
@@ -95,5 +111,6 @@ module.exports = {
     add,
     update,
     addBoardMsg,
-    removeBoardMsg
+    removeBoardMsg,
+    updateTask
 }

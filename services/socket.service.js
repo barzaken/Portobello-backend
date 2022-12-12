@@ -18,14 +18,17 @@ function setupSocketAPI(http) {
             let msg = notification.notification
             gIo.to(notification.to).emit('new-notification',msg)
         })
-        socket.on('set-board', board => {
-            if (socket.myBoard === board) return
-            if (socket.myBoard) {
-                socket.leave(socket.myBoard)
-                logger.info(`Socket is leaving BOARD ${socket.myBoard} [id: ${socket.id}]`)
+        socket.on('set-board', boardId => {
+            if(socket.boardId === boardId) return
+            if(socket.boardId){
+                socket.leave(boardId)
             }
-            socket.join(board)
-            socket.myBoard = board
+            socket.boardId = boardId
+            socket.join(boardId)
+        })
+        socket.on('update-task', info => {
+            // gIo.to(info.boardId).broadcast.emit('task-updated',info)
+            broadcast({type:'task-updated',data:info,room:socket.boardId,userId:socket.userId})
         })
         socket.on('update-board', board => {
             // logger.info(`Updated board from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`)
