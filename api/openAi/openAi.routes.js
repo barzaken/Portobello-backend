@@ -9,6 +9,7 @@ const openai = new OpenAIApi(configuration);
 router.get('/', getChecklist)
 
 async function getChecklist(req,res){
+  try{
     const item = req.query.item
     const response = await openai.createCompletion({
       model: "text-davinci-002",
@@ -17,6 +18,9 @@ async function getChecklist(req,res){
       max_tokens:2048,
     });
     res.status(200).json({ result: response.data.choices[0].text });
+  }catch(err){
+    console.log(err);
+  }
 }
 
 module.exports = router
