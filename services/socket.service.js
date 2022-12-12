@@ -27,15 +27,9 @@ function setupSocketAPI(http) {
             socket.join(boardId)
         })
         socket.on('update-task', info => {
-            // gIo.to(info.boardId).broadcast.emit('task-updated',info)
             broadcast({type:'task-updated',data:info,room:socket.boardId,userId:socket.userId})
         })
         socket.on('update-board', board => {
-            // logger.info(`Updated board from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`)
-            // emits to all sockets:
-            // gIo.emit('chat addMsg', msg)
-            // emits only to sockets in the same room
-            // gIo.to(socket.board).emit('board-updated', board)
             socket.broadcast.emit('board-updated', board)
         })
         socket.on('user-watch', userId => {
@@ -76,7 +70,7 @@ async function emitToUser({ type, data, userId }) {
 // If possible, send to all sockets BUT not the current socket 
 // Optionally, broadcast to a room / to all
 async function broadcast({ type, data, room = null, userId }) {
-    userId = userId.toString()
+    userId = userId?.toString()
     
     logger.info(`Broadcasting event: ${type}`)
     const excludedSocket = await _getUserSocket(userId)
