@@ -15,7 +15,7 @@ async function getChecklist(req,res){
       model: "text-davinci-002",
       prompt: `Can you create to checklist to create a ${item}`,
       temperature:0.9,
-      max_tokens:2048,
+      max_tokens:1024,
     });
     res.status(200).json({ result: response.data.choices[0].text });
   }catch(err){
