@@ -32,7 +32,6 @@ function setupSocketAPI(http) {
         socket.on('update-board', board => {
             // socket.broadcast.emit('board-updated', board)
             broadcast({type:'board-updated',data:board,room:socket.boardId,userId:socket.userId})
-
         })
         socket.on('user-watch', userId => {
             logger.info(`user-watch from socket [id: ${socket.id}], on user ${userId}`)
